@@ -1,11 +1,10 @@
 # API-DATAMEXICO
 install.packages("httr")
-library(httr)
 install.packages("jsonlite")
-library(jsonlite)
-install.packages("rjson")
-library(rjson)
 install.packages("plotly")
+
+library(httr)
+library(jsonlite)
 library(plotly)
 
 # URL API de DATAMEXICO
@@ -14,13 +13,9 @@ library(plotly)
 # Llamando a la API
 URL <- "https://api.datamexico.org/tesseract/cubes/inegi_gdp/aggregate.jsonrecords?drilldowns%5B%5D=Date.Date.Quarter&measures%5B%5D=GDP&parents=false&sparse=false"
 
-# Opción 1 para convertir en cadenas
+# Convertir en cadenas
 Respuesta <- GET(URL)
 Flujo_de_datos <- rawToChar(Respuesta$content)
-
-# Opción 2 para convertir en cadenas
-Respuesta <- GET(URL)
-Flujo_de_datos <- paste(Datos_generales, collapse = " ")
 
 # Obtención de la lista de observaciones 
 Flujo_de_datos <- fromJSON(Flujo_de_datos)
@@ -29,10 +24,10 @@ names(Flujo_de_datos)
 # Seleccionar solo los datos
 Conjunto_de_datos <- Flujo_de_datos$data
 names(Conjunto_de_datos)
+Conjunto_de_datos <- Conjunto_de_datos[,-c(1)]
 
 # Covertir en un marco de datos
 Marco_de_datos <- data.frame(Conjunto_de_datos)
-Marco_de_datos <- Marco_de_datos[,-c(1)]
 colnames(Marco_de_datos) <- c("Trimestre", "PIB")
 
 # Gráfico del PIB
